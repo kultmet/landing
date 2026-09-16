@@ -23,7 +23,7 @@ jobs:
     - name: Push to Docker Hub
       uses: docker/build-push-action@v2
       with:
-        context: ./landing/
-        file: ./landing/Dockerfile
+        context: ./
+        file: ./Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/landing:latest
