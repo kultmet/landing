@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ profile.title|default:'Музыкант' }}</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+      :root {
+        --crimson: #8b1a1a;
+        --crimson-deep: #5c1010;
+        --gold: #c9a84c;
+        --gold-light: #d4ba6a;
+        --cream: #f5f0e8;
+        --cream-dark: #e8e0d0;
+        --charcoal: #1a1a1a;
+        --brown: #3d2b1f;
+        --brown-light: #5a4233;
+        --text: #2c2420;
+        --text-light: #6b5d52;
+        --line: rgba(201, 168, 76, 0.18);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+
+      body {
+        font-family: Georgia, "Times New Roman", serif;
+        color: var(--text);
+        background: var(--cream);
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .nav {
+        position: fixed;
+        inset: 0 0 auto 0;
+        z-index: 1000;
+        padding: 1rem 1.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        background: linear-gradient(180deg, rgba(26, 26, 26, 0.72), rgba(26, 26, 26, 0.18));
+        backdrop-filter: blur(8px);
+      }
+
+      .nav-logo {
+        font-size: 1.1rem;
+        color: var(--gold);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .nav-shortcuts {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .shortcut {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border: 1px solid rgba(201, 168, 76, 0.25);
+        border-radius: 999px;
+        color: var(--gold);
+        text-decoration: none;
+        background: rgba(255, 255, 255, 0.03);
+        transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      }
+
+      .shortcut:hover {
+        transform: translateY(-2px);
+        background: rgba(201, 168, 76, 0.12);
+        border-color: rgba(201, 168, 76, 0.5);
+      }
+
+      .shortcut svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: #120d0a;
+      }
+
+      .hero-carousel {
+        position: absolute;
+        inset: 0;
+      }
+
+      .hero-carousel__swiper {
+        width: 100%;
+        height: 100%;
+      }
+
+      .hero-carousel__slide {
+        position: relative;
+        width: 100%;
+        height: 100svh;
+      }
+
+      .hero-carousel__media {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: brightness(0.56) contrast(1.08);
+      }
+
+      .hero-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 20%;
+        filter: brightness(0.56) contrast(1.08);
+      }
+
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(26, 26, 26, 0.35) 0%, rgba(26, 26, 26, 0.18) 35%, rgba(26, 26, 26, 0.35) 75%, rgba(26, 26, 26, 0.88) 100%);
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        padding: 6rem 1.25rem 4rem;
+        max-width: 1040px;
+        width: 100%;
+      }
+
+      .hero-ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.3rem;
+      }
+
+      .hero-ornament span {
+        width: 62px;
+        height: 1px;
+        background: var(--gold);
+        display: block;
+      }
+
+      .hero-ornament svg {
+        width: 18px;
+        height: 18px;
+        fill: var(--gold);
+      }
+
+      .hero-title {
+        font-size: clamp(3rem, 8vw, 6.2rem);
+        color: #fff;
+        line-height: 1.06;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.5rem;
+      }
+
+      .hero-title em {
+        color: var(--gold);
+        font-style: italic;
+        font-weight: 400;
+      }
+
+      .hero-subtitle {
+        font-size: clamp(0.88rem, 2vw, 1.02rem);
+        color: rgba(255, 255, 255, 0.78);
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
+      }
+
+      .hero-text {
+        max-width: 820px;
+        margin: 0 auto;
+        color: rgba(255, 255, 255, 0.88);
+        font-size: 1.05rem;
+        line-height: 1.95;
+      }
+
+      .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2rem;
+        padding: 0.95rem 2.6rem;
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        text-decoration: none;
+        font-size: 0.82rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+      }
+
+      .hero-cta:hover {
+        transform: translateY(-2px);
+        background: var(--gold);
+        color: var(--charcoal);
+      }
+
+      .scroll-hint {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.45rem;
+        color: rgba(255, 255, 255, 0.55);
+        text-decoration: none;
+      }
+
+      .scroll-hint span {
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .scroll-hint svg {
+        width: 18px;
+        height: 18px;
+        stroke: rgba(255, 255, 255, 0.55);
+        fill: none;
+        stroke-width: 2;
+      }
+
+      .section {
+        padding: 5rem 1.5rem;
+      }
+
+      .wrap {
+        width: min(1120px, calc(100% - 1rem));
+        margin: 0 auto;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .section-label {
+        display: inline-block;
+        font-size: 0.74rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--gold);
+        font-weight: 600;
+        margin-bottom: 0.9rem;
+      }
+
+      .section-title {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        line-height: 1.2;
+        font-weight: 600;
+        color: var(--charcoal);
+      }
+
+      .fleuron {
+        color: var(--gold);
+        font-size: 0.65em;
+        vertical-align: middle;
+      }
+
+      .ornament-line {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        margin-top: 1.2rem;
+      }
+
+      .ornament-line::before,
+      .ornament-line::after {
+        content: '';
+        width: 52px;
+        height: 1px;
+        background: var(--gold);
+      }
+
+      .diamond {
+        width: 6px;
+        height: 6px;
+        background: var(--gold);
+        transform: rotate(45deg);
+      }
+
+      .about {
+        background: var(--cream);
+      }
+
+      .about-inner {
+        max-width: 820px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .about-text {
+        font-size: 1.08rem;
+        line-height: 1.95;
+        color: var(--text-light);
+        font-weight: 300;
+      }
+
+      .about-text strong {
+        color: var(--crimson);
+        font-weight: 600;
+      }
+
+      .content-list {
+        display: grid;
+        gap: 2rem;
+      }
+
+      .content-card {
+        display: grid;
+        gap: 1.2rem;
+        width: 100%;
+        max-width: 1080px;
+        margin: 0 auto;
+        box-sizing: border-box;
+      }
+
+      .video-wrapper {
+        position: relative;
+        width: 100%;
+        min-height: 360px;
+        overflow: hidden;
+        border-radius: 12px;
+        background: #000;
+        box-shadow: 0 8px 30px rgba(61, 43, 31, 0.15);
+      }
+
+      .video-wrapper picture,
+      .video-wrapper img,
+      .video-wrapper video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .media-carousel {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        --media-carousel-frame-ratio: 16 / 9;
+        --media-carousel-max-width: 100%;
+      }
+
+      .media-carousel[data-orientation="v"] {
+        width: min(640px, 100%);
+        max-width: min(640px, 100%);
+        margin: 0 auto;
+        --media-carousel-frame-ratio: 9 / 16;
+      }
+
+      .media-carousel[data-orientation="h"] {
+        width: min(100%, var(--media-carousel-max-width, 100%));
+        max-width: min(100%, var(--media-carousel-max-width, 100%));
+        margin: 0 auto;
+        --media-carousel-frame-ratio: 16 / 9;
+      }
+
+      .media-carousel__swiper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #000;
+        box-shadow: 0 8px 30px rgba(61, 43, 31, 0.15);
+      }
+
+      .media-carousel__swiper .swiper-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 0;
+      }
+
+      .media-carousel__slide {
+        position: relative;
+        width: 100% !important;
+        max-width: 100%;
+        flex: 0 0 100%;
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
+        background: #000;
+      }
+
+      .media-carousel__frame {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        aspect-ratio: var(--media-carousel-frame-ratio);
+        overflow: hidden;
+        background: transparent;
+      }
+
+      .media-carousel__frame::before {
+        content: '';
+        position: absolute;
+        inset: -16%;
+        background-image: var(--media-carousel-background, none);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        filter: blur(8px) brightness(1.2) saturate(0.7);
+        transform: scale(1.24);
+        opacity: 0.78;
+      }
+
+      .media-carousel__frame::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.06));
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__swiper {
+        margin: 0 auto;
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__frame {
+        width: 100%;
+        height: min(88svh, 920px);
+        max-height: min(88svh, 920px);
+        aspect-ratio: auto;
+        margin: 0 auto;
+        background: transparent;
+      }
+
+      .media-carousel[data-orientation="h"] .media-carousel__frame {
+        background: transparent;
+      }
+
+      .media-carousel__image,
+      .media-carousel__video,
+      .media-carousel__iframe {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        z-index: 2;
+      }
+
+      .media-carousel__image,
+      .media-carousel__video {
+        object-fit: contain;
+        background: var(--cream);
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__image,
+      .media-carousel[data-orientation="v"] .media-carousel__video,
+      .media-carousel[data-orientation="v"] .media-carousel__iframe {
+        object-fit: contain;
+        background: transparent;
+      }
+
+      .media-carousel[data-orientation="h"] .media-carousel__image,
+      .media-carousel[data-orientation="h"] .media-carousel__video,
+      .media-carousel[data-orientation="h"] .media-carousel__iframe {
+        background: transparent;
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__image,
+      .media-carousel[data-orientation="v"] .media-carousel__video {
+        transform: none;
+        transform-origin: center center;
+        object-position: center center;
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__swiper {
+        width: 100%;
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__slide {
+        background: #000;
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__nav {
+        width: 42px;
+        height: 42px;
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__nav--prev {
+        left: 10px;
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__nav--next {
+        right: 10px;
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__pagination {
+        bottom: 10px;
+      }
+
+      .media-carousel__iframe {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+      }
+
+      .media-carousel__not-found {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #201612 0%, #0b0807 100%);
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: clamp(0.9rem, 2vw, 1.15rem);
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .media-carousel__nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 5;
+        width: 46px;
+        height: 46px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: rgba(26, 26, 26, 0.35);
+        backdrop-filter: blur(6px);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        color: #fff;
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__nav {
+        width: 40px;
+        height: 40px;
+        background: rgba(0, 0, 0, 0.42);
+      }
+
+      .media-carousel__nav svg {
+        width: 28px;
+        height: 28px;
+      }
+
+      .media-carousel__nav--prev {
+        left: 12px;
+      }
+
+      .media-carousel__nav--prev svg {
+        transform: scaleX(-1);
+      }
+
+      .media-carousel__nav--next {
+        right: 12px;
+      }
+
+      .media-carousel__nav--next svg {
+        transform: none !important;
+      }
+
+      .media-carousel__nav.swiper-button-disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+
+      .media-carousel__pagination {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 14px;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        z-index: 5;
+      }
+
+      .media-carousel[data-orientation="v"] .media-carousel__pagination {
+        bottom: 12px;
+      }
+
+      .media-carousel__bullet {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.45);
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15) inset;
+      }
+
+      .media-carousel__bullet--active {
+        background: var(--gold);
+      }
+
+      .media-carousel__fallback {
+        display: grid;
+        place-items: center;
+        aspect-ratio: 16 / 9;
+        padding: 1.25rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.78);
+      }
+
+      .media-carousel__text {
+        position: relative;
+        z-index: 1;
+        max-width: 100%;
+        white-space: normal;
+        word-break: break-word;
+        line-height: 1.25;
+      }
+
+      .post-text {
+        font-size: 1.08rem;
+        line-height: 1.95;
+        color: var(--text-light);
+        text-align: center;
+      }
+
+      .contacts-strip {
+        display: none;
+      }
+
+      .contact-footer {
+        background: var(--brown-light);
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .contact-footer::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 30% 50%, rgba(201, 168, 76, 0.08) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(139, 26, 26, 0.06) 0%, transparent 60%);
+      }
+
+      .contact-footer .wrap {
+        position: relative;
+        z-index: 1;
+      }
+
+      .contact-footer .section-title {
+        color: #fff;
+      }
+
+      .contact-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .contact-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.8rem 1rem;
+        border: 1px solid rgba(201, 168, 76, 0.2);
+        border-radius: 999px;
+        color: var(--gold);
+        text-decoration: none;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .contact-link svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+        flex: 0 0 auto;
+      }
+
+      .contact-details {
+        margin-top: 2rem;
+        display: grid;
+        gap: 0.8rem;
+        justify-content: center;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.82);
+      }
+
+      .contact-details a {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+      }
+
+      .contact-details a:hover {
+        color: var(--gold);
+      }
+
+      .contacts-icons {
+        display: flex;
+        justify-content: center;
+        gap: 0.65rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .contacts-icons .shortcut {
+        background: rgba(0, 0, 0, 0.14);
+      }
+
+      .contacts-icons .shortcut svg {
+        width: 17px;
+        height: 17px;
+      }
+
+      .footer-note {
+        margin-top: 2rem;
+        text-align: center;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.45);
+      }
+
+      @media (max-width: 900px) {
+        .nav {
+          padding: 0.9rem 1rem;
+        }
+
+        .hero-title {
+          font-size: clamp(2.8rem, 13vw, 4.8rem);
+        }
+
+        .hero-text {
+          font-size: 1rem;
+        }
+
+        .section {
+          padding: 4rem 1rem;
+        }
+
+        .section-title {
+          font-size: clamp(1.8rem, 7vw, 2.6rem);
+        }
+
+        .video-wrapper {
+          min-height: 240px;
+        }
+
+        .media-carousel__frame {
+          width: 100%;
+        }
+
+        .media-carousel[data-orientation="v"] .media-carousel__frame {
+          width: 100%;
+          height: min(92svh, 860px);
+          max-height: min(92svh, 860px);
+          aspect-ratio: auto;
+        }
+
+        .media-slide {
+          min-height: 260px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .nav-logo {
+          max-width: 58vw;
+          font-size: 0.94rem;
+        }
+
+        .nav-shortcuts {
+          gap: 0.4rem;
+        }
+
+        .shortcut {
+          width: 34px;
+          height: 34px;
+        }
+
+        .hero-content {
+          padding-top: 5.5rem;
+        }
+
+        .hero-text {
+          line-height: 1.8;
+        }
+
+        .ornament-line::before,
+        .ornament-line::after {
+          width: 36px;
+        }
+
+        .contact-link {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nav">
+      <a href="#hero" class="nav-logo">{{ profile.title|default:'Музыкант' }}</a>
+      <div class="nav-shortcuts" aria-label="Контакты">
+        {% if contacts.phone %}
+          <a href="#contacts" class="shortcut" title="Телефон">
+            <svg viewBox="0 0 24 24">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z" />
+            </svg>
+          </a>
+        {% endif %}
+        {% if contacts.telegram %}
+          <a href="https://t.me/{{ contacts.telegram|cut:'@' }}"
+             class="shortcut"
+             title="Telegram">
+            <svg viewBox="0 0 24 24">
+              <path d="M9.04 15.42 8.9 19.1c.5 0 .72-.22.98-.47l2.35-2.25 4.87 3.56c.89.49 1.52.23 1.74-.82l3.18-14.93h0c.28-1.31-.47-1.82-1.33-1.5L1.24 9.61c-1.25.49-1.23 1.18-.21 1.5l4.88 1.52L17.8 5.38c.55-.34 1.05-.15.64.2Z" />
+            </svg>
+          </a>
+        {% endif %}
+        {% if contacts.vk %}
+          <a href="#contacts" class="shortcut" title="VK">
+            <svg viewBox="0 0 24 24">
+              <path d="M12.7 16.7h.95s.29-.03.44-.2c.14-.15.13-.43.13-.43s-.02-1.33.6-1.53c.61-.19 1.39 1.28 2.22 1.84.64.43 1.11.34 1.11.34l2.24-.03s1.17-.07.62-.98c-.05-.08-.35-.76-1.8-2.1-1.51-1.4-1.31-1.17.51-3.57 1.11-1.45 1.56-2.33 1.42-2.71-.13-.37-.94-.27-.94-.27l-2.52.02s-.19-.03-.33.05c-.14.08-.23.26-.23.26s-.4 1.07-.93 1.98c-1.11 1.9-1.55 2-.73 2.54.18.11.31.23.4.37.74 1.05-.16 1.37-.16 1.37s-.82.14-1.94-.79c-1.69-1.4-2.94-4.96-2.94-4.96s-.08-.18-.22-.28c-.16-.1-.38-.13-.38-.13H9.06s-.22.02-.3.12c-.08.1-.01.31-.01.31s1.99 4.66 4.37 7.01c2.18 2.14 4.65 2 4.65 2Z" />
+            </svg>
+          </a>
+        {% endif %}
+        {% if contacts.instagram %}
+          <a href="#contacts" class="shortcut" title="Instagram">
+            <svg viewBox="0 0 24 24">
+              <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7.1A4.9 4.9 0 1 1 7.1 12 4.9 4.9 0 0 1 12 7.1Zm0 2A2.9 2.9 0 1 0 14.9 12 2.9 2.9 0 0 0 12 9.1Z" />
+            </svg>
+          </a>
+        {% endif %}
+      </div>
+    </nav>
+    <header class="hero" id="hero">
+      {% if hero_slides %}
+        <div class="hero-carousel">
+          <div class="swiper hero-carousel__swiper js-hero-swiper">
+            <div class="swiper-wrapper">
+              {% for slide in hero_slides %}
+                <div class="swiper-slide hero-carousel__slide">
+                  <img src="{{ slide.url }}"
+                       alt="{{ slide.title }}"
+                       class="hero-carousel__media" />
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% elif profile.main_photo %}
+        <img src="{{ profile.main_photo.url }}"
+             alt="{{ profile.title }}"
+             class="hero-img" />
+      {% else %}
+        <div class="hero-img"
+             style="background: linear-gradient(135deg, #3d2b1f 0%, #120d0a 100%)"></div>
+      {% endif %}
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-ornament">
+          <span></span>
+          <svg viewBox="0 0 20 20">
+            <path d="M10 0L12.5 7.5H20L14 12.5L16 20L10 15.5L4 20L6 12.5L0 7.5H7.5Z" />
+          </svg>
+          <span></span>
+        </div>
+        <h1 class="hero-title">{{ profile.title|default:'Имя музыканта' }}</h1>
+        <p class="hero-subtitle">{{ profile.tagline|default:'[Добавьте слоган]' }}</p>
+        <p class="hero-text">{{ profile.description|default:'[Тут должно быть описание]' }}</p>
+        {% if profile.repertoire_text %}
+          <p class="hero-text" style="margin-top: 1rem;">{{ profile.repertoire_text }}</p>
+        {% endif %}
+        <a href="#contacts" class="hero-cta">Связаться</a>
+      </div>
+      <a href="#content" class="scroll-hint">
+        <span>Листайте</span>
+        <svg viewBox="0 0 24 24">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </a>
+    </header>
+    <main>
+      <section class="section about" id="content">
+        <div class="wrap">
+          <div class="ornament-line">
+            <div class="diamond"></div>
+          </div>
+          <div class="content-list">
+            {% for post in posts %}
+              <article class="content-card">
+                <div class="section-header" style="margin-bottom: 0;">
+                  <h3 class="section-title" style="font-size: clamp(1.6rem, 3vw, 2.4rem);">{{ post.title }}</h3>
+                </div>
+                {% with media_items=post.available_media_items|default:post.media_items.all %}
+                  {% if media_items|length > 0 %}
+                    <div class="media-carousel js-media-carousel"
+                         data-post-id="{{ post.id }}"
+                         data-orientation="{{ post.carousel_orientation }}">
+                      <div class="swiper media-carousel__swiper" data-autoinit="true">
+                        <div class="swiper-wrapper">
+                          {% for media in media_items %}
+                            <div class="swiper-slide media-carousel__slide">
+                              <div class="media-carousel__frame">
+                                {% if media.is_not_found %}
+                                  <div class="media-carousel__not-found">
+                                    <span class="media-carousel__text">Not Found</span>
+                                  </div>
+                                {% elif media.media_kind == 'i' and media.uploaded_file %}
+                                  <img class="media-carousel__image"
+                                       src="{{ media.url }}"
+                                       alt="{{ post.title }}" />
+                                {% elif media.media_kind == 'v' and media.uploaded_file %}
+                                  <video class="media-carousel__video" controls preload="metadata">
+                                    <source src="{{ media.url }}" />
+                                  </video>
+                                {% elif media.media_kind == 'v' and media.external_url %}
+                                  <iframe class="media-carousel__iframe"
+                                          src="{{ media.url }}"
+                                          allow="fullscreen; picture-in-picture"
+                                          allowfullscreen
+                                          loading="lazy"></iframe>
+                                {% endif %}
+                              </div>
+                            </div>
+                          {% endfor %}
+                        </div>
+                        {% if media_items|length > 1 %}
+                          <button type="button"
+                                  class="media-carousel__nav media-carousel__nav--prev js-media-prev"
+                                  aria-label="Предыдущий слайд">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path opacity="0.8" d="M24 32L32 24M32 24L24 16M32 24H16M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                          </button>
+                          <button type="button"
+                                  class="media-carousel__nav media-carousel__nav--next js-media-next"
+                                  aria-label="Следующий слайд">
+                            <svg viewBox="0 0 48 48"
+                                 fill="none"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 style="transform:scaleX(-1)">
+                              <path opacity="0.8" d="M24 32L32 24M32 24L24 16M32 24H16M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                          </button>
+                          <div class="media-carousel__pagination js-media-pagination"></div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% else %}
+                    <div class="media-carousel__fallback">Здесь будет медиа для этого блока</div>
+                  {% endif %}
+                {% endwith %}
+                <div class="about-inner">
+                  <p class="about-text">{{ post.rendered_body }}</p>
+                </div>
+              </article>
+            {% empty %}
+              <div class="content-card">
+                <p class="about-text" style="text-align:center;">
+                  Контент появится после добавления первого материала через админку.
+                </p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="section contact-footer" id="contacts">
+      <div class="wrap">
+        <div class="section-header">
+          <div class="ornament-line">
+            <div class="diamond"></div>
+          </div>
+        </div>
+        <div class="contact-links">
+          {% if contacts.phone %}
+            <a href="tel:{{ contacts.phone|cut:' '|cut:'('|cut:')'|cut:'-' }}"
+               class="contact-link">
+              <svg viewBox="0 0 24 24">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z" />
+              </svg>
+              <span>Телефон</span>
+            </a>
+          {% endif %}
+          {% if contacts.telegram %}
+            <a href="https://t.me/{{ contacts.telegram|cut:'@' }}"
+               class="contact-link">
+              <svg viewBox="0 0 24 24">
+                <path d="M9.04 15.42 8.9 19.1c.5 0 .72-.22.98-.47l2.35-2.25 4.87 3.56c.89.49 1.52.23 1.74-.82l3.18-14.93h0c.28-1.31-.47-1.82-1.33-1.5L1.24 9.61c-1.25.49-1.23 1.18-.21 1.5l4.88 1.52L17.8 5.38c.55-.34 1.05-.15.64.2Z" />
+              </svg>
+              <span>Telegram</span>
+            </a>
+          {% endif %}
+          {% if contacts.vk %}
+            <a href="#contacts" class="contact-link">
+              <svg viewBox="0 0 24 24">
+                <path d="M12.7 16.7h.95s.29-.03.44-.2c.14-.15.13-.43.13-.43s-.02-1.33.6-1.53c.61-.19 1.39 1.28 2.22 1.84.64.43 1.11.34 1.11.34l2.24-.03s1.17-.07.62-.98c-.05-.08-.35-.76-1.8-2.1-1.51-1.4-1.31-1.17.51-3.57 1.11-1.45 1.56-2.33 1.42-2.71-.13-.37-.94-.27-.94-.27l-2.52.02s-.19-.03-.33.05c-.14.08-.23.26-.23.26s-.4 1.07-.93 1.98c-1.11 1.9-1.55 2-.73 2.54.18.11.31.23.4.37.74 1.05-.16 1.37-.16 1.37s-.82.14-1.94-.79c-1.69-1.4-2.94-4.96-2.94-4.96s-.08-.18-.22-.28c-.16-.1-.38-.13-.38-.13H9.06s-.22.02-.3.12c-.08.1-.01.31-.01.31s1.99 4.66 4.37 7.01c2.18 2.14 4.65 2 4.65 2Z" />
+              </svg>
+              <span>VK</span>
+            </a>
+          {% endif %}
+          {% if contacts.instagram %}
+            <a href="#contacts" class="contact-link">
+              <svg viewBox="0 0 24 24">
+                <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7.1A4.9 4.9 0 1 1 7.1 12 4.9 4.9 0 0 1 12 7.1Zm0 2A2.9 2.9 0 1 0 14.9 12 2.9 2.9 0 0 0 12 9.1Z" />
+              </svg>
+              <span>Instagram</span>
+            </a>
+          {% endif %}
+        </div>
+        <div class="contacts-icons" aria-label="Быстрый переход к контактам">
+          {% if contacts.phone %}
+            <a href="#contacts" class="shortcut" title="Телефон">
+              <svg viewBox="0 0 24 24">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z" />
+              </svg>
+            </a>
+          {% endif %}
+          {% if contacts.telegram %}
+            <a href="https://t.me/{{ contacts.telegram|cut:'@' }}"
+               class="shortcut"
+               title="Telegram">
+              <svg viewBox="0 0 24 24">
+                <path d="M9.04 15.42 8.9 19.1c.5 0 .72-.22.98-.47l2.35-2.25 4.87 3.56c.89.49 1.52.23 1.74-.82l3.18-14.93h0c.28-1.31-.47-1.82-1.33-1.5L1.24 9.61c-1.25.49-1.23 1.18-.21 1.5l4.88 1.52L17.8 5.38c.55-.34 1.05-.15.64.2Z" />
+              </svg>
+            </a>
+          {% endif %}
+          {% if contacts.vk %}
+            <a href="#contacts" class="shortcut" title="VK">
+              <svg viewBox="0 0 24 24">
+                <path d="M12.7 16.7h.95s.29-.03.44-.2c.14-.15.13-.43.13-.43s-.02-1.33.6-1.53c.61-.19 1.39 1.28 2.22 1.84.64.43 1.11.34 1.11.34l2.24-.03s1.17-.07.62-.98c-.05-.08-.35-.76-1.8-2.1-1.51-1.4-1.31-1.17.51-3.57 1.11-1.45 1.56-2.33 1.42-2.71-.13-.37-.94-.27-.94-.27l-2.52.02s-.19-.03-.33.05c-.14.08-.23.26-.23.26s-.4 1.07-.93 1.98c-1.11 1.9-1.55 2-.73 2.54.18.11.31.23.4.37.74 1.05-.16 1.37-.16 1.37s-.82.14-1.94-.79c-1.69-1.4-2.94-4.96-2.94-4.96s-.08-.18-.22-.28c-.16-.1-.38-.13-.38-.13H9.06s-.22.02-.3.12c-.08.1-.01.31-.01.31s1.99 4.66 4.37 7.01c2.18 2.14 4.65 2 4.65 2Z" />
+              </svg>
+            </a>
+          {% endif %}
+          {% if contacts.instagram %}
+            <a href="#contacts" class="shortcut" title="Instagram">
+              <svg viewBox="0 0 24 24">
+                <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7.1A4.9 4.9 0 1 1 7.1 12 4.9 4.9 0 0 1 12 7.1Zm0 2A2.9 2.9 0 1 0 14.9 12 2.9 2.9 0 0 0 12 9.1Z" />
+              </svg>
+            </a>
+          {% endif %}
+        </div>
+        {% if contacts %}
+          <div class="contact-details">
+            {% if contacts.phone %}
+              <div>
+                Телефон: <a href="tel:{{ contacts.phone|cut:' '|cut:'('|cut:')'|cut:'-' }}">{{ contacts.phone }}</a>
+              </div>
+            {% endif %}
+            {% if contacts.telegram %}
+              <div>
+                Telegram: <a href="https://t.me/{{ contacts.telegram|cut:'@' }}">{{ contacts.telegram }}</a>
+              </div>
+            {% endif %}
+            {% if contacts.vk %}<div>VK: {{ contacts.vk }}</div>{% endif %}
+            {% if contacts.instagram %}<div>Instagram: {{ contacts.instagram }}</div>{% endif %}
+            {% if contacts.city %}<div>{{ contacts.city }}</div>{% endif %}
+            {% if contacts.extra_contact %}<div>{{ contacts.extra_contact }}</div>{% endif %}
+          </div>
+        {% endif %}
+        <div class="footer-note">{{ profile.title|default:'Музыкант' }} · {{ contacts.city|default:'Россия' }}</div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+      document.querySelectorAll('.js-hero-swiper').forEach((swiperEl) => {
+        const slideCount = swiperEl.querySelectorAll('.swiper-slide').length;
+        new Swiper(swiperEl, {
+          slidesPerView: 1,
+          effect: 'fade',
+          fadeEffect: {
+            crossFade: true
+          },
+          speed: 900,
+          loop: slideCount > 1,
+          allowTouchMove: false,
+          autoplay: slideCount > 1 ? {
+            delay: 3600,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: false,
+          } : false,
+          watchOverflow: true,
+          observer: true,
+          observeParents: true,
+          resizeObserver: true,
+        });
+      });
+
+      document.querySelectorAll('.js-media-carousel').forEach((carousel) => {
+        const swiperEl = carousel.querySelector('.swiper');
+        const prevEl = carousel.querySelector('.js-media-prev');
+        const nextEl = carousel.querySelector('.js-media-next');
+        const paginationEl = carousel.querySelector('.js-media-pagination');
+        const mediaItems = [...carousel.querySelectorAll('.media-carousel__image, .media-carousel__video, .media-carousel__iframe')];
+        const frames = [...carousel.querySelectorAll('.media-carousel__frame')];
+        const slideCount = carousel.querySelectorAll('.swiper-slide').length;
+
+        if (!swiperEl || slideCount === 0) return;
+
+        const setCarouselWidthFromMedia = () => {
+          const widths = mediaItems
+            .map((media) => media.naturalWidth || media.videoWidth || media.clientWidth || 0)
+            .filter((width) => width > 0);
+
+          if (widths.length > 0) {
+            const maxWidth = Math.max(...widths);
+            carousel.style.setProperty('--media-carousel-max-width', `${maxWidth}px`);
+          }
+        };
+
+        const setBackgroundLayers = () => {
+          frames.forEach((frame) => {
+            const image = frame.querySelector('.media-carousel__image');
+            const video = frame.querySelector('.media-carousel__video');
+            const source = image?.currentSrc || image?.src || video?.querySelector('source')?.src || video?.currentSrc || video?.src || '';
+            if (source) {
+              frame.style.setProperty('--media-carousel-background', `url("${source}")`);
+            }
+          });
+        };
+
+        setCarouselWidthFromMedia();
+        setBackgroundLayers();
+        mediaItems.forEach((media) => {
+          if (!media.complete) {
+            media.addEventListener('load', setCarouselWidthFromMedia, {
+              once: true
+            });
+          }
+        });
+
+        const swiper = new Swiper(swiperEl, {
+          slidesPerView: 1,
+          centeredSlides: false,
+          roundLengths: true,
+          spaceBetween: 0,
+          speed: 300,
+          watchOverflow: true,
+          rewind: slideCount > 1,
+          navigation: slideCount > 1 ? {
+            prevEl,
+            nextEl,
+          } : false,
+          pagination: slideCount > 1 ? {
+            el: paginationEl,
+            clickable: true,
+            bulletClass: 'media-carousel__bullet',
+            bulletActiveClass: 'media-carousel__bullet--active',
+            renderBullet: (index, className) => `<button type="button" class="${className}" aria-label="Слайд ${index + 1}"></button>`,
+          } : false,
+          observer: true,
+          observeParents: true,
+          resizeObserver: true,
+        });
+      });
+    </script>
+  </body>
+</html>
