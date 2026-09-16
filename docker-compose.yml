@@ -6,12 +6,24 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     volumes:
       - ./db.sqlite3:/app/db.sqlite3
       - staticfiles:/app/staticfiles
       - media:/app/media
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - staticfiles:/static:ro
+      - media:/media:ro
 
 volumes:
   staticfiles:
