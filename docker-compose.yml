@@ -1,9 +1,8 @@
 services:
   web:
     build:
-      context: .
-      dockerfile: Dockerfile
-    restart: unless-stopped
+      image: ${DOCKER_USERNAME}/landing:latest
+    restart: always
     env_file:
       - .env
     expose:
