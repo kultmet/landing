@@ -1,7 +1,7 @@
 import re
 
 from django.utils.html import escape
-from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 MARKDOWN_LINK_RE = re.compile(r"\[([^\]]+)\]\((https?://[^\s)]+)\)")
 BOLD_RE = re.compile(r"\*\*([^*]+)\*\*")
@@ -26,4 +26,4 @@ def render_markdown_text(value) -> str:
     )
     text = BOLD_RE.sub(lambda match: f"<strong>{escape(match.group(1))}</strong>", text)
     text = text.replace("\n", "<br>")
-    return format_html(text)
+    return mark_safe(text)
