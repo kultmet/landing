@@ -43,7 +43,6 @@ jobs:
             whoami
             hostname
             pwd
-            sudo systemctl stop nginx
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/landing:latest
             sudo docker-compose stop
             sudo docker-compose rm web
