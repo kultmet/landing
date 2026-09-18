@@ -43,6 +43,8 @@ jobs:
             whoami
             hostname
             pwd
+            sudo rm .env
+            touch .env
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/landing:latest
             sudo docker-compose stop
             sudo docker-compose rm web
