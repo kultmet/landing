@@ -53,4 +53,4 @@ jobs:
             echo DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }} >> .env
             echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
             echo DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} >> .env
-            sudo docker-compose up -d --build
+            sudo docker compose up -d --build
