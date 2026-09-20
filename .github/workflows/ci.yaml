@@ -58,7 +58,7 @@ jobs:
             whoami
             hostname
             pwd
-            sudo rm .env
+            sudo rm -f .env
             touch .env
             echo DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY >> .env
             echo DJANGO_DEBUG=False >> .env
