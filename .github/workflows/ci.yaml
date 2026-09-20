@@ -39,7 +39,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }} # тут у вас root
           key: ${{ secrets.SSH_KEY }}
-          source: "docker-compose.yml" # какой файл копировать из репозитория
+          source: "docker-compose.yml,nginx/" # какой файл копировать из репозитория
           target: "/app/landing"
       - name: executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
