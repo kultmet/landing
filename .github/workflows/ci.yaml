@@ -55,13 +55,13 @@ jobs:
             pwd
             sudo rm .env
             touch .env
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/landing:latest
-            sudo docker compose stop
-            sudo docker compose rm web
             echo DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} >> .env
             echo DJANGO_DEBUG=False >> .env
             echo DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }} >> .env
             echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
-            export DOCKER_USERNAME==${{ secrets.DOCKER_USERNAME }}
-            # echo DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} >> .env
+            # export DOCKER_USERNAME==${{ secrets.DOCKER_USERNAME }}
+            echo DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} >> .env
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/landing:latest
+            sudo docker compose stop
+            sudo docker compose rm web
             sudo docker compose up -d --build
