@@ -1,7 +1,6 @@
 services:
   web:
-    build:
-      image: ${DOCKER_USERNAME}/landing:latest
+    image: ${DOCKER_USERNAME}/landing:latest
     restart: always
     env_file:
       - .env
