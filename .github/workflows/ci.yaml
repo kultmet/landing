@@ -47,6 +47,9 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
+          # 1. Сначала объявляем переменные, которые хотим передать на сервер
+          envs: DJANGO_SECRET_KEY,DJANGO_ALLOWED_HOSTS,DATABASE_URL,DOCKER_USERNAME
+          # 2. Внутри скрипта используем их как обычные переменные Linux через $
           script: |
             set -e
             echo "SSH connection successful"
@@ -55,13 +58,19 @@ jobs:
             pwd
             sudo rm .env
             touch .env
-            echo DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} >> .env
+            echo DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY >> .env
             echo DJANGO_DEBUG=False >> .env
-            echo DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }} >> .env
-            echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
-            # export DOCKER_USERNAME==${{ secrets.DOCKER_USERNAME }}
-            echo DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} >> .env
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/landing:latest
+            echo DJANGO_ALLOWED_HOSTS=$DJANGO_ALLOWED_HOSTS >> .env
+            echo DATABASE_URL=$DATABASE_URL >> .env
+            # export DOCKER_USERNAME==$DOCKER_USERNAME
+            echo DOCKER_USERNAME=$DOCKER_USERNAME >> .env
+            sudo docker pull $DOCKER_USERNAME/landing:latest
             sudo docker compose stop
             sudo docker compose rm web
             sudo docker compose up -d --build
+        # 3. Привязываем секреты GitHub к переменным окружения экшена
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
