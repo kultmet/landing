@@ -40,7 +40,7 @@ jobs:
           username: ${{ secrets.USER }} # тут у вас root
           key: ${{ secrets.SSH_KEY }}
           source: "docker-compose.yml" # какой файл копировать из репозитория
-          target: "/"
+          target: "/app/landing"
       - name: executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
         with:
@@ -52,6 +52,8 @@ jobs:
           # 2. Внутри скрипта используем их как обычные переменные Linux через $
           script: |
             set -e
+            # 1. Переходим в правильную папку, куда только что улетел docker-compose.yml
+            cd /app/landing
             echo "SSH connection successful"
             whoami
             hostname
