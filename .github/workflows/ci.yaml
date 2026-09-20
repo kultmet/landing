@@ -48,7 +48,7 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           # 1. Сначала объявляем переменные, которые хотим передать на сервер
-          envs: DJANGO_SECRET_KEY,DJANGO_ALLOWED_HOSTS,DATABASE_URL,DOCKER_USERNAME
+          envs: DJANGO_SECRET_KEY,DJANGO_ALLOWED_HOSTS,DATABASE_URL,DOCKER_USERNAME,DJANGO_CSRF_TRUSTED_ORIGINS
           # 2. Внутри скрипта используем их как обычные переменные Linux через $
           script: |
             set -e
