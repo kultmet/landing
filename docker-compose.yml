@@ -1,6 +1,6 @@
 services:
   web:
-    image: ${DOCKER_USERNAME}/landing:latest
+    image: kultmet/landing:latest
     restart: always
     env_file:
       - .env

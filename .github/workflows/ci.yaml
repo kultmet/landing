@@ -63,7 +63,7 @@ jobs:
             echo DJANGO_ALLOWED_HOSTS=$DJANGO_ALLOWED_HOSTS >> .env
             echo DATABASE_URL=$DATABASE_URL >> .env
             echo DOCKER_USERNAME=$DOCKER_USERNAME >> .env
-            sudo docker pull $DOCKER_USERNAME/landing:latest
+            sudo docker pull kultmet/landing:latest
             sudo docker compose stop
             sudo docker compose rm web
             sudo docker compose up -d --build
