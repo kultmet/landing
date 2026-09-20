@@ -37,7 +37,7 @@ ALLOWED_HOSTS = env.list(
     default=["127.0.0.1", "localhost", "0.0.0.0"],
 )
 CSRF_TRUSTED_ORIGINS = env.list("DJANGO_CSRF_TRUSTED_ORIGINS", default=[])
-
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Application definition
 
