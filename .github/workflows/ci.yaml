@@ -61,7 +61,7 @@ jobs:
             sudo rm -f .env
             touch .env
             echo DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY >> .env
-            echo DJANGO_CSRF_TRUSTED_ORIGINS=$DJANGO_CSRF_TRUSTED_ORIGINS
+            echo DJANGO_CSRF_TRUSTED_ORIGINS=$DJANGO_CSRF_TRUSTED_ORIGINS >> .env
             echo DJANGO_DEBUG=False >> .env
             echo DJANGO_ALLOWED_HOSTS=$DJANGO_ALLOWED_HOSTS >> .env
             echo DATABASE_URL=$DATABASE_URL >> .env
