@@ -84,11 +84,13 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
+
 DATABASES = {
-    "default": env.db(
-        "DATABASE_URL",
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-    ),
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        # Изменяем путь, чтобы файл создавался внутри папки db
+        "NAME": BASE_DIR / "db" / "db.sqlite3",
+    },
 }
 
 

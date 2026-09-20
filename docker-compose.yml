@@ -7,7 +7,7 @@ services:
     expose:
       - "8000"
     volumes:
-      - ./db.sqlite3:/app/db.sqlite3
+      - ./db:/app/db
       - staticfiles:/app/staticfiles
       - media:/app/media
 
